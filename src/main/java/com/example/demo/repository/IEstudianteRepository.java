@@ -6,4 +6,5 @@ public interface IEstudianteRepository {
 	
 	public Estudiante seleccionarPorCedula(String cedula);
 	
+	public void insertar(Estudiante estudiante);
 }
