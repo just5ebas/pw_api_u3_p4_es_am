@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.repository.modelo.Estudiante;
@@ -28,10 +30,19 @@ public class EstudianteControllerRestful {
 	private IEstudianteService estudianteService;
 
 	// GET
-	@GetMapping(path = "/{cedula}")
-	public ResponseEntity<Estudiante> consultarPorCedula(@PathVariable String cedula) {
+//	@GetMapping(path = "/{cedula}")
+//	public ResponseEntity<Estudiante> consultarPorCedula(@PathVariable String cedula) {
+//		// String cedula = "1750844787";
+//		return ResponseEntity.status(227).body(this.estudianteService.consultarPorCedula(cedula));
+//	}
+
+	@GetMapping(path = "/{cedula}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.OK)
+	public Estudiante consultarPorCedula(@PathVariable String cedula) {
 		// String cedula = "1750844787";
-		return ResponseEntity.status(227).body(this.estudianteService.consultarPorCedula(cedula));
+
+		return this.estudianteService.consultarPorCedula(cedula);
+
 	}
 
 	@GetMapping(path = "/status/{cedula}")
@@ -50,11 +61,26 @@ public class EstudianteControllerRestful {
 		return new ResponseEntity<>(lista, cabeceras, 228);
 	}
 
-	@PostMapping
+	// POST
+	@PostMapping(consumes = "application/xml")
 	public void guardar(@RequestBody Estudiante estudiante) {
 		this.estudianteService.guardar(estudiante);
 	}
 
+	@PostMapping(path = "/g", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Integer guardarConRetorno(@RequestBody Estudiante estudiante) {
+		return this.estudianteService.guardarConRetorno(estudiante);
+	}
+
+	@PostMapping(path = "/g2", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public Estudiante guardarConRetorno2(@RequestBody Estudiante estudiante) {
+		Estudiante e = new Estudiante();
+		e.setId(this.estudianteService.guardarConRetorno(estudiante));
+		e.setCedula(estudiante.getCedula());
+		return e;
+	}
+
+	// PUT
 	@PutMapping(path = "/{identificador}")
 	public void actualizar(@RequestBody Estudiante estudiante, @PathVariable Integer identificador) {
 		estudiante.setId(identificador);
@@ -62,6 +88,7 @@ public class EstudianteControllerRestful {
 
 	}
 
+	// PATCH
 	@PatchMapping(path = "/{identificador}")
 	public void actualizarParcial(@RequestBody Estudiante estudiante, @PathVariable Integer identificador) {
 		Estudiante estu1 = this.estudianteService.buscarPorId(identificador);
@@ -69,6 +96,7 @@ public class EstudianteControllerRestful {
 
 	}
 
+	// DELETE
 	@DeleteMapping(path = "/{id}")
 	public void borrar(@PathVariable Integer id) {
 		this.estudianteService.borrar(id);

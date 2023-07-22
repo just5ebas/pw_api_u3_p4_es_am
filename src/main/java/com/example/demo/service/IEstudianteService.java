@@ -19,5 +19,8 @@ public interface IEstudianteService {
 	public Estudiante buscarPorId(Integer id);
 
 	public List<Estudiante> mostrarTodos(String provincia);
+	
+	public Integer guardarConRetorno(Estudiante estudiante);
 
+	
 }

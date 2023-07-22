@@ -30,13 +30,12 @@ public class EstudianteService implements IEstudianteService {
 		// TODO Auto-generated method stub
 		this.estudianteRepository.actualizar(estudiante);
 	}
-	
+
 	@Override
 	public void actualizarParcial(String cedulaActual, String cedulaNueva) {
 		// TODO Auto-generated method stub
 		this.estudianteRepository.actualizarParcial(cedulaActual, cedulaNueva);
 	}
-
 
 	@Override
 	public void borrar(Integer id) {
@@ -56,5 +55,11 @@ public class EstudianteService implements IEstudianteService {
 		return this.estudianteRepository.buscarTodos(provincia);
 	}
 
-	
+	@Override
+	public Integer guardarConRetorno(Estudiante estudiante) {
+		// TODO Auto-generated method stub
+		this.estudianteRepository.insertar(estudiante);
+		return this.estudianteRepository.seleccionarPorCedula(estudiante.getCedula()).getId();
+	}
+
 }
