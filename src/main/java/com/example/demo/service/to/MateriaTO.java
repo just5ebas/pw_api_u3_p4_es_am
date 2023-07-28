@@ -1,13 +1,16 @@
 package com.example.demo.service.to;
 
-public class MateriaTO {
+import java.io.Serializable;
+
+import org.springframework.hateoas.RepresentationModel;
+
+public class MateriaTO extends RepresentationModel<MateriaTO> implements Serializable {
 	
+	private static final long serialVersionUID= 1L;
 
 	private Integer id;
 	
 	private String nombre;
-	
-	private String tipo;
 	
 	private Integer creditos;
 	
@@ -28,13 +31,6 @@ public class MateriaTO {
 		this.nombre = nombre;
 	}
 
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
 
 	public Integer getCreditos() {
 		return creditos;

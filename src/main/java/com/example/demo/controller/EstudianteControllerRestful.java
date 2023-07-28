@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
+import com.example.demo.service.IMateriaService;
 import com.example.demo.service.to.EstudianteTO;
 import com.example.demo.service.to.MateriaTO;
 
@@ -33,6 +34,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class EstudianteControllerRestful {
 	@Autowired
 	private IEstudianteService estudianteService;
+
+	@Autowired
+	private IMateriaService iMateriaService;
 
 	// GET
 //	@GetMapping(path = "/{cedula}")
@@ -108,19 +112,27 @@ public class EstudianteControllerRestful {
 
 	}
 
-	@GetMapping(path="/hateoas")
+	@GetMapping(path = "/hateoas", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<EstudianteTO>> mostrarTodosHATEOAS() {
-		List<EstudianteTO> lista=this.estudianteService.buscarTodos();
-		//return ResponseEntity.status(HttpStatus.OK).body(lista);
-		for(EstudianteTO e:lista) {
-			Link myLink = linkTo(methodOn(EstudianteControllerRestful.class).buscarPorEstudiante(e.getCedula())).withRel("materias");
+		List<EstudianteTO> lista = this.estudianteService.buscarTodos();
+		// return ResponseEntity.status(HttpStatus.OK).body(lista);
+		for (EstudianteTO e : lista) {
+			Link myLink = linkTo(methodOn(EstudianteControllerRestful.class).buscarPorEstudiante(e.getCedula()))
+					.withRel("materias");
 			e.add(myLink);
 		}
 		return new ResponseEntity<>(lista, null, 200);
 	}
 
-	@GetMapping(path = "/{cedula}/materias")
+	@GetMapping(path = "/{cedula}/materias", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MateriaTO>> buscarPorEstudiante(@PathVariable String cedula) {
-		return null;
+		List<MateriaTO> lista = this.iMateriaService.buscarPorCedulaEstudiante(cedula);
+		for (MateriaTO mat : lista) {
+			Link myLink = linkTo(methodOn(MateriaControllerRestful.class).consultarPorId(mat.getId()))
+					.withRel("materia");
+			mat.add(myLink);
+		}
+
+		return new ResponseEntity<>(lista, null, 200);
 	}
 }

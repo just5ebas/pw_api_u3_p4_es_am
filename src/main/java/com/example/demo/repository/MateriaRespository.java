@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.example.demo.repository.modelo.Materia;
@@ -46,6 +48,14 @@ public class MateriaRespository implements IMateriaRepository {
 	public void eliminar(Integer id) {
 		// TODO Auto-generated method stub
 		this.entityManager.remove(this.buscarPorId(id));
+	}
+
+	@Override
+	public List<Materia> buscarPorCedulaEstudiante(String cedula) {
+		// TODO Auto-generated method stub
+		TypedQuery<Materia> myQ=this.entityManager.createQuery("SELECT m FROM Materia m WHERE m.estudiante.cedula =: datoEstudiante", Materia.class);
+		myQ.setParameter("datoEstudiante", cedula);
+		return myQ.getResultList();
 	}
 
 }

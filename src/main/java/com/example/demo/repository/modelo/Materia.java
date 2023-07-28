@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
@@ -22,11 +24,12 @@ public class Materia {
 	@Column(name="mate_nombre")
 	private String nombre;
 	
-	@Column(name="mate_tipo")
-	private String tipo;
-	
 	@Column(name="mate_creditos")
 	private Integer creditos;
+	
+	@ManyToOne
+	@JoinColumn(name = "mate_id_estu")
+	private Estudiante estudiante;
 	
 	//SET y GET
 	public Integer getId() {
@@ -45,20 +48,20 @@ public class Materia {
 		this.nombre = nombre;
 	}
 
-	public String getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
 	public Integer getCreditos() {
 		return creditos;
 	}
 
 	public void setCreditos(Integer creditos) {
 		this.creditos = creditos;
+	}
+
+	public Estudiante getEstudiante() {
+		return estudiante;
+	}
+
+	public void setEstudiante(Estudiante estudiante) {
+		this.estudiante = estudiante;
 	}
 	
 

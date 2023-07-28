@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.List;
+
 import com.example.demo.repository.modelo.Materia;
 
 public interface IMateriaRepository {
@@ -14,4 +16,5 @@ public interface IMateriaRepository {
 	
 	public void eliminar(Integer id);
 	
+	public List<Materia> buscarPorCedulaEstudiante(String cedula);
 }
