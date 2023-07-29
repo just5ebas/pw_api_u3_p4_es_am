@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,6 +32,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/estudiantes")
+@CrossOrigin
 public class EstudianteControllerRestful {
 	@Autowired
 	private IEstudianteService estudianteService;
@@ -129,7 +131,7 @@ public class EstudianteControllerRestful {
 		List<MateriaTO> lista = this.iMateriaService.buscarPorCedulaEstudiante(cedula);
 		for (MateriaTO mat : lista) {
 			Link myLink = linkTo(methodOn(MateriaControllerRestful.class).consultarPorId(mat.getId()))
-					.withRel("materia");
+					.withSelfRel();
 			mat.add(myLink);
 		}
 
