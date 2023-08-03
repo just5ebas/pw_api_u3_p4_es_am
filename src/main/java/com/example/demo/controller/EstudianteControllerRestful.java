@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -73,7 +74,7 @@ public class EstudianteControllerRestful {
 	}
 
 	// POST
-	@PostMapping(consumes = "application/xml")
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void guardar(@RequestBody Estudiante estudiante) {
 		this.estudianteService.guardar(estudiante);
 	}
@@ -108,10 +109,13 @@ public class EstudianteControllerRestful {
 	}
 
 	// DELETE
-	@DeleteMapping(path = "/{id}")
-	public void borrar(@PathVariable Integer id) {
+	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Estudiante> borrar(@PathVariable Integer id) {
+		Estudiante estu = this.estudianteService.buscarPorId(id);
+
 		this.estudianteService.borrar(id);
 
+		return ResponseEntity.status(HttpStatus.OK).body(estu);
 	}
 
 	@GetMapping(path = "/hateoas", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -130,8 +134,7 @@ public class EstudianteControllerRestful {
 	public ResponseEntity<List<MateriaTO>> buscarPorEstudiante(@PathVariable String cedula) {
 		List<MateriaTO> lista = this.iMateriaService.buscarPorCedulaEstudiante(cedula);
 		for (MateriaTO mat : lista) {
-			Link myLink = linkTo(methodOn(MateriaControllerRestful.class).consultarPorId(mat.getId()))
-					.withSelfRel();
+			Link myLink = linkTo(methodOn(MateriaControllerRestful.class).consultarPorId(mat.getId())).withSelfRel();
 			mat.add(myLink);
 		}
 
