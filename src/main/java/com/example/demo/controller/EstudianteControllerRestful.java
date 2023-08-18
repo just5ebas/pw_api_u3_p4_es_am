@@ -73,7 +73,7 @@ public class EstudianteControllerRestful {
 	}
 
 	// POST
-	@PostMapping(consumes = "application/xml")
+	@PostMapping(consumes = "application/json")
 	public void guardar(@RequestBody Estudiante estudiante) {
 		this.estudianteService.guardar(estudiante);
 	}
@@ -108,10 +108,12 @@ public class EstudianteControllerRestful {
 	}
 
 	// DELETE
-	@DeleteMapping(path = "/{id}")
-	public void borrar(@PathVariable Integer id) {
+	@DeleteMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Estudiante> borrar(@PathVariable Integer id) {
+		Estudiante est = this.estudianteService.buscarPorId(id);
 		this.estudianteService.borrar(id);
-
+		
+		return ResponseEntity.status(HttpStatus.OK).body(est);
 	}
 
 	@GetMapping(path = "/hateoas", produces = MediaType.APPLICATION_JSON_VALUE)
